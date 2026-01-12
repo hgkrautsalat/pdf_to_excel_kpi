@@ -30,10 +30,40 @@ def download_update(url):
 
 def start_app():
     subprocess.Popen(
-        [sys.executable, os.path.join("app", "main.py")],
+        [sys.executable, os.path.join("converter", "main.py")],
         cwd=os.getcwd()
     )
 
 if __name__ == "__main__":
     check_for_update()
     start_app()
+
+# # launcher/launcher_main.py
+# import requests
+# import subprocess
+# import os
+# import json
+
+# VERSION_URL = "https://raw.githubusercontent.com/DEIN_USER/DEIN_REPO/main/version.json"
+# APP_EXE = "app.exe"
+
+# def start_app():
+#     subprocess.Popen([APP_EXE], cwd=os.getcwd())
+
+# def main():
+#     r = requests.get(VERSION_URL)
+#     data = r.json()
+
+#     if not os.path.exists(APP_EXE):
+#         print("App fehlt – Download...")
+#         download(data["download_url"])
+
+#     start_app()
+
+# def download(url):
+#     r = requests.get(url)
+#     with open(APP_EXE, "wb") as f:
+#         f.write(r.content)
+
+# if __name__ == "__main__":
+#     main()
