@@ -81,11 +81,14 @@ APP_EXE = "converter.exe"
 LOCAL_VERSION_FILE = "version.json"
 
 
-def parse_version(v):
-    return tuple(map(int, v.split(".")))
+def parse_version(version:str) -> tuple:
+    version_list = version.split(".")
+    version_map = map(int, version_list)
+    version_tuple = tuple(version_map)
+    return version_tuple
+    # return tuple(map(int, version.split(".")))
 
-
-def load_local_version():
+def load_local_version()-> str:
     if not os.path.exists(LOCAL_VERSION_FILE):
         return "0.0.0"
 
@@ -93,14 +96,14 @@ def load_local_version():
         return json.load(f)["version"]
 
 
-def save_local_version(version):
+def save_local_version(version:str) -> None:
     with open(LOCAL_VERSION_FILE, "w") as f:
         json.dump({"version": version}, f)
 
 
-def download_app(url):
+def download_app(url:str) -> None:
     print("⬇️ Lade neues Update herunter...")
-    r = requests.get(url)
+    r: requests.Response = requests.get(url)
     r.raise_for_status()
 
     with open(APP_EXE, "wb") as f:
@@ -135,29 +138,46 @@ def start_app():
     #     cwd=os.getcwd()
     # )
 
+def check_for_update():
+    print("🔍 Prüfe auf Updates...")
+    try:
+        response: requests.Response = requests.get(VERSION_URL, timeout=5)
+        data:dict = response.json()
+
+        remote_version:str = data["version"]
+        download_url:str = data["exe_url"]
+
+        local_version:str = load_local_version()
+
+        print(f"Lokale Version: {local_version}")
+        print(f"Remote Version: {remote_version}")
+
+        remote_version:tuple = parse_version(remote_version)
+        local_version:tuple  = parse_version(local_version)
+        print(f"Vergleiche Versionen: {remote_version} > {local_version}?")
+
+        if remote_version > local_version:
+            print("🆕 Neues Update verfügbar!")
+            download_app(download_url)
+            save_local_version(remote_version)
+            print("✅ Update erfolgreich installiert")
+        else:
+            print("✅ Keine Updates verfügbar")
+
+        # if not os.path.exists(APP_EXE):
+        #     raise RuntimeError("converter.exe fehlt!")
+
+    except Exception as e:
+        print()
+        print("Kein Internet / Fehler → normal starten")
+        print()
+        print('Exception:', '\n', e)
+        print()
+        print()
+
 
 def main():
-    print("🔍 Prüfe auf Updates...")
-
-    remote = requests.get(VERSION_URL).json()
-    remote_version = remote["version"]
-    download_url = remote["exe_url"]
-
-    local_version = load_local_version()
-
-    print(f"Lokale Version: {local_version}")
-    print(f"Remote Version: {remote_version}")
-
-    if parse_version(remote_version) > parse_version(local_version):
-        print("🆕 Neues Update verfügbar!")
-        download_app(download_url)
-        save_local_version(remote_version)
-    else:
-        print("✅ Keine Updates verfügbar")
-
-    # if not os.path.exists(APP_EXE):
-    #     raise RuntimeError("converter.exe fehlt!")
-
+    check_for_update()
     start_app()
 
 
