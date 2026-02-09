@@ -106,15 +106,12 @@ def get_latest_release_info(release_url:str) -> dict:
 
 
 def main():
-    latest_release:dict         = get_latest_release_info(LATEST_RELEASE_URL)
-
-    latest_release_tag_name:str    = get_latest_release_tag(latest_release)
-    local_release_tag_name:str     = get_local_version(LOCAL_VERSION_FILE)
-
-    latest_release_tag:tuple = parse_version(latest_release_tag_name)
-    local_release_tag:tuple  = parse_version(local_release_tag_name)
-
-    download_url:str = DOWNLOAD_URL + latest_release_tag_name + "/" + APP_EXE
+    latest_release:dict             = get_latest_release_info(LATEST_RELEASE_URL)
+    latest_release_tag_name:str     = get_latest_release_tag(latest_release)
+    local_release_tag_name:str      = get_local_version(LOCAL_VERSION_FILE)
+    latest_release_tag:tuple        = parse_version(latest_release_tag_name)
+    local_release_tag:tuple         = parse_version(local_release_tag_name)
+    download_url:str                = DOWNLOAD_URL + latest_release_tag_name + "/" + APP_EXE
 
     if (latest_release_tag > local_release_tag) or not os.path.exists(os.path.join(DIR_PATH, APP_EXE)):
         print(os.path.join(DIR_PATH, APP_EXE))
