@@ -1,7 +1,7 @@
 __pycache__/
 venv/
 dist/
-!dist/KPIConverter.exe
 build/
 *.exe
 *.spec
+!dist/KPIConverter.exe
