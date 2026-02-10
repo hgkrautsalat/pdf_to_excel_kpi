@@ -14,11 +14,18 @@ DOWNLOAD_URL = "https://github.com/hgkrautsalat/pdf_to_excel_kpi/releases/downlo
 APP_EXE = "app.exe"
 LOCAL_VERSION_FILE = "version_local.json"
 
-# DIR_PATH:str = os.path.dirname(os.path.realpath(__file__)).split("launcher")[0]
-
 # Bestimmt den Pfad zum lokalen AppData-Verzeichnis und den Pfad zum Anwendungsordner
-BASE_DIR_PATH = os.environ.get("LOCALAPPDATA")
-APP_DIR_PATH = os.path.join(BASE_DIR_PATH, "Programs", "KPIConverter")
+# Anwendungsordner im lokalen AppData-Verzeichnis unter "Programs/KPIConverter"
+# Wird über Setup.iss festgelegt
+# Verwenden wenn launcher.exe global unter C:\Program Files gespeichert wird
+#------------------------------
+# BASE_DIR_PATH = os.environ.get("LOCALAPPDATA")
+# APP_DIR_PATH = os.path.join(BASE_DIR_PATH, "Programs", "KPIConverter")
+#------------------------------
+# Verwenden wenn launcher.exe lokal unter C:\Users\<USER>\AppData\Local\Programs gespeichert wird
+APP_DIR_PATH = os.path.dirname(os.path.realpath(__file__)).split("launcher")[0]
+#------------------------------
+# ---- ---------------------- ----
 
 
 def start_app() -> None:
@@ -114,6 +121,7 @@ def save_local_version(version:str) -> None:
 
     # Bestimmt den Pfad zur lokalen Versionsdatei version_local.json im Anwendungsordner
     local_path:str = os.path.join(APP_DIR_PATH, LOCAL_VERSION_FILE)
+
     # Speichert die Versionsnummer in der JSON-Datei im Format {"version": "V_X.Y.Z"}
     with open(local_path, "w") as f:
         print(f"Speichere lokale Version {version} in Datei: {local_path}")
@@ -132,6 +140,7 @@ def get_local_version(file_name:str)-> str:
 
     # Bestimmt den Pfad zur lokalen Versionsdatei version_local.json im Anwendungsordner
     local_path:str = os.path.join(APP_DIR_PATH, file_name)
+
     # Überprüft, ob die lokale Versionsdatei existiert
     # und gibt "V_0.0.0" zurück, wenn sie nicht existiert
     if not os.path.exists(local_path):
