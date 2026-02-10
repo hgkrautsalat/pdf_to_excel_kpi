@@ -5,6 +5,8 @@ def test_function() -> None:
     sleep(10)
     print("Test function completed.")
     sleep(1)
+    print("Exiting test function.")
+    sleep(5)
     return None
 
 

@@ -6,4 +6,3 @@ build/
 # !dist/KPIConverter/
 *.exe
 *.spec
-!KPIConverter_WINDOWS_1.0_setup.exe
